@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Resume Analysis Report</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f4f6;
+            color: #111827;
+        }
+
+        nav {
+            background: #111827;
+            color: white;
+            padding: 16px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        .nav-links a:hover {
+            background: #374151;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .report-header {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .report-header h1 {
+            margin-bottom: 10px;
+        }
+
+        .report-header p {
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .button-row {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button,
+        .dashboard-btn {
+            border: none;
+            text-decoration: none;
+            background: #2563eb;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover,
+        .dashboard-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .section h2 {
+            margin-bottom: 18px;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .score-card {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            padding: 22px;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        .score-card h3 {
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .score {
+            font-size: 35px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 8px 13px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .job-card {
+            border: 1px solid #e5e7eb;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background: #fafafa;
+        }
+
+        .job-card h3 {
+            margin-bottom: 12px;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #dcfce7;
+            color: #166534;
+            font-weight: bold;
+            margin-right: 7px;
+        }
+
+        .ml-badge {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #ede9fe;
+            color: #6d28d9;
+            font-weight: bold;
+        }
+
+        .job-card h4 {
+            margin-top: 15px;
+            margin-bottom: 7px;
+        }
+
+        .job-card ul {
+            padding-left: 20px;
+            line-height: 1.7;
+        }
+
+        .learning {
+            background: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            padding: 14px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+        }
+
+        .summary {
+            background: #eef2ff;
+            border: 1px solid #c7d2fe;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .summary h3 {
+            margin-bottom: 10px;
+        }
+
+        .summary p {
+            margin-bottom: 8px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #6b7280;
+        }
+
+        @media (max-width: 800px) {
+
+            .score-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+        }
+
+        @media print {
+
+            nav,
+            .button-row {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .section,
+            .report-header {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🤖 AI Resume Analyzer
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Dashboard</a>
+
+        <a href="/history">History</a>
+
+        <a href="/logout">Logout</a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="report-header">
+
+        <h1>
+            📄 Resume Analysis Report
+        </h1>
+
+        <p>
+            <strong>User:</strong>
+            {{ username }}
+        </p>
+
+        <p>
+            <strong>Resume:</strong>
+            <span id="resumeName">
+                -
+            </span>
+        </p>
+
+        <div class="button-row">
+
+            <button onclick="window.print()">
+                🖨️ Print / Save PDF
+            </button>
+
+            <a
+                href="/"
+                class="dashboard-btn"
+            >
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= NO DATA ================= -->
+
+    <div
+        id="noData"
+        class="section empty"
+    >
+
+        <h2>
+            No Resume Analysis Found
+        </h2>
+
+        <p>
+            Please analyze a resume from the Dashboard first.
+        </p>
+
+        <br>
+
+        <a
+            href="/"
+            class="dashboard-btn"
+        >
+            Go to Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- ================= REPORT ================= -->
+
+    <div id="reportContent" style="display:none;">
+
+
+        <!-- ================= SCORES ================= -->
+
+        <div class="section">
+
+            <h2>
+                📊 Resume Scores
+            </h2>
+
+            <div class="score-grid">
+
+                <div class="score-card">
+
+                    <h3>
+                        Resume Score
+                    </h3>
+
+                    <div
+                        class="score"
+                        id="resumeScore"
+                    >
+                        0%
+                    </div>
+
+                </div>
+
+
+                <div class="score-card">
+
+                    <h3>
+                        ATS Score
+                    </h3>
+
+                    <div
+                        class="score"
+                        id="atsScore"
+                    >
+                        0%
+                    </div>
+
+                </div>
+
+
+                <div class="score-card">
+
+                    <h3>
+                        Section Score
+                    </h3>
+
+                    <div
+                        class="score"
+                        id="sectionScore"
+                    >
+                        0%
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= SKILLS ================= -->
+
+        <div class="section">
+
+            <h2>
+                🛠️ Detected Skills
+            </h2>
+
+            <div
+                id="skills"
+                class="skills"
+            ></div>
+
+        </div>
+
+
+        <!-- ================= ATS ================= -->
+
+        <div class="section">
+
+            <h2>
+                🤖 ATS Analysis
+            </h2>
+
+            <p>
+                <strong>
+                    Keyword Score:
+                </strong>
+
+                <span id="keywordScore">
+                    0%
+                </span>
+            </p>
+
+            <br>
+
+            <h3>
+                ✅ Found Keywords
+            </h3>
+
+            <p id="foundKeywords">
+                -
+            </p>
+
+            <br>
+
+            <h3>
+                ❌ Missing Keywords
+            </h3>
+
+            <p id="missingKeywords">
+                -
+            </p>
+
+        </div>
+
+
+        <!-- ================= ATS SUGGESTIONS ================= -->
+
+        <div class="section">
+
+            <h2>
+                💡 ATS Suggestions
+            </h2>
+
+            <div id="suggestions"></div>
+
+        </div>
+
+
+        <!-- ================= AI SUMMARY ================= -->
+
+        <div class="section">
+
+            <h2>
+                🧠 AI Recommendation Summary
+            </h2>
+
+            <div
+                id="summary"
+                class="summary"
+            ></div>
+
+        </div>
+
+
+        <!-- ================= JOB RECOMMENDATIONS ================= -->
+
+        <div class="section">
+
+            <h2>
+                💼 Recommended Job Roles
+            </h2>
+
+            <div id="jobs"></div>
+
+        </div>
+
+
+        <!-- ================= LEARNING ================= -->
+
+        <div class="section">
+
+            <h2>
+                📚 Learning Recommendations
+            </h2>
+
+            <div id="learning"></div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+    const savedData =
+        sessionStorage.getItem(
+            "latestReportData"
+        );
+
+    const savedResumeName =
+        sessionStorage.getItem(
+            "resumeName"
+        );
+
+
+    if (!savedData) {
+
+        document.getElementById(
+            "noData"
+        ).style.display = "block";
+
+    } else {
+
+        try {
+
+            const data =
+                JSON.parse(savedData);
+
+
+            document.getElementById(
+                "noData"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "reportContent"
+            ).style.display = "block";
+
+
+            /* ================= RESUME NAME ================= */
+
+            document.getElementById(
+                "resumeName"
+            ).innerText =
+                savedResumeName || "Resume.pdf";
+
+
+            /* ================= SCORES ================= */
+
+            document.getElementById(
+                "resumeScore"
+            ).innerText =
+                Number(
+                    data.resume_score || 0
+                ) + "%";
+
+
+            document.getElementById(
+                "atsScore"
+            ).innerText =
+                Number(
+                    data.ats_analysis?.ats_score || 0
+                ) + "%";
+
+
+            document.getElementById(
+                "sectionScore"
+            ).innerText =
+                Number(
+                    data.section_score || 0
+                ) + "%";
+
+
+            /* ================= SKILLS ================= */
+
+            const skillsContainer =
+                document.getElementById(
+                    "skills"
+                );
+
+            const skills =
+                data.skills || [];
+
+
+            if (skills.length === 0) {
+
+                skillsContainer.innerHTML =
+                    "<p>No skills detected.</p>";
+
+            } else {
+
+                skills.forEach(
+                    skill => {
+
+                        const span =
+                            document.createElement(
+                                "span"
+                            );
+
+                        span.className =
+                            "skill";
+
+                        span.innerText =
+                            skill;
+
+                        skillsContainer.appendChild(
+                            span
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /* ================= ATS ================= */
+
+            const ats =
+                data.ats_analysis || {};
+
+
+            document.getElementById(
+                "keywordScore"
+            ).innerText =
+                Number(
+                    ats.keyword_score || 0
+                ) + "%";
+
+
+            document.getElementById(
+                "foundKeywords"
+            ).innerText =
+                (
+                    ats.found_keywords || []
+                ).join(", ") ||
+                "No keywords found";
+
+
+            document.getElementById(
+                "missingKeywords"
+            ).innerText =
+                (
+                    ats.missing_keywords || []
+                ).join(", ") ||
+                "No major missing keywords";
+
+
+            /* ================= SUGGESTIONS ================= */
+
+            const suggestionsContainer =
+                document.getElementById(
+                    "suggestions"
+                );
+
+            const suggestions =
+                ats.suggestions || [];
+
+
+            if (suggestions.length === 0) {
+
+                suggestionsContainer.innerHTML =
+                    "<p>No additional suggestions.</p>";
+
+            } else {
+
+                suggestions.forEach(
+                    suggestion => {
+
+                        const div =
+                            document.createElement(
+                                "div"
+                            );
+
+                        div.className =
+                            "learning";
+
+                        div.innerText =
+                            suggestion;
+
+                        suggestionsContainer.appendChild(
+                            div
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /* ================= JOBS ================= */
+
+            const jobsContainer =
+                document.getElementById(
+                    "jobs"
+                );
+
+            const jobs =
+                data.job_recommendations || [];
+
+
+            jobs.forEach(
+                job => {
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+                    card.className =
+                        "job-card";
+
+
+                    let html = "";
+
+                    html +=
+                        "<h3>💼 " +
+                        job.job_role +
+                        "</h3>";
+
+
+                    html +=
+                        "<span class='score-badge'>" +
+                        "Final Match: " +
+                        Number(
+                            job.final_match_score || 0
+                        ) +
+                        "%" +
+                        "</span>";
+
+
+                    html +=
+                        "<span class='ml-badge'>" +
+                        "ML Match: " +
+                        Number(
+                            job.ml_match_score || 0
+                        ) +
+                        "%" +
+                        "</span>";
+
+
+                    html +=
+                        "<h4>🛠️ Missing Skills</h4>";
+
+
+                    if (
+                        job.missing_skills &&
+                        job.missing_skills.length
+                    ) {
+
+                        html += "<ul>";
+
+                        job.missing_skills.forEach(
+                            skill => {
+
+                                html +=
+                                    "<li>" +
+                                    skill +
+                                    "</li>";
+
+                            }
+                        );
+
+                        html += "</ul>";
+
+                    } else {
+
+                        html +=
+                            "<p>No major missing skills.</p>";
+
+                    }
+
+
+                    card.innerHTML =
+                        html;
+
+                    jobsContainer.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+
+            /* ================= LEARNING ================= */
+
+            const learningContainer =
+                document.getElementById(
+                    "learning"
+                );
+
+            let learningItems = [];
+
+
+            jobs.forEach(
+                job => {
+
+                    if (
+                        job.learning_recommendations
+                    ) {
+
+                        job.learning_recommendations.forEach(
+                            item => {
+
+                                learningItems.push(
+                                    item
+                                );
+
+                            }
+                        );
+
+                    }
+
+                }
+            );
+
+
+            if (learningItems.length === 0) {
+
+                learningContainer.innerHTML =
+                    "<p>No major learning recommendations.</p>";
+
+            } else {
+
+                learningItems.forEach(
+                    item => {
+
+                        const div =
+                            document.createElement(
+                                "div"
+                            );
+
+                        div.className =
+                            "learning";
+
+                        div.innerText =
+                            "📚 " + item;
+
+                        learningContainer.appendChild(
+                            div
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /* ================= AI SUMMARY ================= */
+
+            const summaryContainer =
+                document.getElementById(
+                    "summary"
+                );
+
+
+            if (jobs.length > 0) {
+
+                const bestJob =
+                    jobs.reduce(
+                        (
+                            best,
+                            current
+                        ) => {
+
+                            return Number(
+                                current.final_match_score || 0
+                            ) >
+                            Number(
+                                best.final_match_score || 0
+                            )
+                                ? current
+                                : best;
+
+                        }
+                    );
+
+
+                const missing =
+                    bestJob.missing_skills || [];
+
+
+                const learning =
+                    bestJob.learning_recommendations || [];
+
+
+                let missingText =
+                    missing.length
+                        ? missing.join(", ")
+                        : "No major missing skills";
+
+
+                let learningText =
+                    learning.length
+                        ? learning.join(", ")
+                        : "No specific recommendation";
+
+
+                summaryContainer.innerHTML =
+
+                    "<h3>🎯 Highest Match Role</h3>" +
+
+                    "<p><strong>" +
+                    bestJob.job_role +
+                    "</strong></p>" +
+
+                    "<br>" +
+
+                    "<p><strong>📊 Final Match Score:</strong> " +
+                    Number(
+                        bestJob.final_match_score || 0
+                    ) +
+                    "%</p>" +
+
+                    "<p><strong>🧠 ML Match Score:</strong> " +
+                    Number(
+                        bestJob.ml_match_score || 0
+                    ) +
+                    "%</p>" +
+
+                    "<p><strong>🛠️ Missing Skills:</strong> " +
+                    missingText +
+                    "</p>" +
+
+                    "<p><strong>📚 Learning Path:</strong> " +
+                    learningText +
+                    "</p>";
+
+            } else {
+
+                summaryContainer.innerText =
+                    "No job recommendation available.";
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Report error:",
+                error
+            );
+
+        }
+
+    }
+
+</script>
+
+</body>
+
+</html>
