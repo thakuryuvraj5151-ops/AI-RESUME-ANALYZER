@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Analysis History</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #111827;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            background: #111827;
+            color: white;
+            padding: 16px 35px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 9px 13px;
+            border-radius: 7px;
+        }
+
+        .nav-links a:hover {
+            background: #374151;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+            width: 94%;
+            max-width: 1250px;
+            margin: 30px auto;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+        }
+
+        /* ================= SUMMARY ================= */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .summary-card h3 {
+            color: #6b7280;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 30px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        /* ================= HISTORY CARD ================= */
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .history-card {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+
+            border-left: 5px solid #2563eb;
+        }
+
+        .history-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 15px;
+            flex-wrap: wrap;
+
+            margin-bottom: 18px;
+        }
+
+        .resume-name {
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .record-id {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        /* ================= SCORE GRID ================= */
+
+        .score-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+
+            margin-bottom: 18px;
+        }
+
+        .score-box {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .score-box h4 {
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .score-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .ats-value {
+            color: #7c3aed;
+        }
+
+        .match-value {
+            color: #15803d;
+        }
+
+        /* ================= JOB ROLE ================= */
+
+        .job-role {
+            background: #eff6ff;
+            color: #1d4ed8;
+
+            display: inline-block;
+
+            padding: 8px 13px;
+
+            border-radius: 20px;
+
+            font-weight: bold;
+
+            margin-bottom: 15px;
+        }
+
+        /* ================= MISSING SKILLS ================= */
+
+        .missing-section {
+            background: #fff7ed;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .missing-section h4 {
+            margin-bottom: 8px;
+            color: #9a3412;
+        }
+
+        .missing-skills {
+            color: #c2410c;
+            line-height: 1.7;
+        }
+
+        /* ================= EMPTY STATE ================= */
+
+        .empty {
+            background: white;
+            padding: 60px 25px;
+
+            text-align: center;
+
+            border-radius: 14px;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .empty-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .empty h2 {
+            margin-bottom: 10px;
+        }
+
+        .empty p {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-btn {
+            display: inline-block;
+
+            background: #2563eb;
+            color: white;
+
+            text-decoration: none;
+
+            padding: 11px 18px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+        }
+
+        .dashboard-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* ================= LOADING ================= */
+
+        .loading {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 14px;
+        }
+
+        .loader {
+            width: 35px;
+            height: 35px;
+
+            margin: 0 auto 12px;
+
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #2563eb;
+
+            border-radius: 50%;
+
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+
+            100% {
+                transform: rotate(360deg);
+            }
+
+        }
+
+        /* ================= ERROR ================= */
+
+        .error {
+            display: none;
+
+            background: #fee2e2;
+            color: #991b1b;
+
+            padding: 15px;
+
+            border-radius: 8px;
+
+            margin-bottom: 20px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .score-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            nav {
+                padding: 15px;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .page-header h1 {
+                font-size: 24px;
+            }
+
+            .score-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav>
+
+    <div class="logo">
+        🤖 AI Resume Analyzer
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">
+            Dashboard
+        </a>
+
+        <a href="/report">
+            Report
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="page-header">
+
+        <h1>
+            📜 Analysis History
+        </h1>
+
+        <p>
+            View your previous resume analysis results.
+        </p>
+
+    </div>
+
+
+    <!-- ================= ERROR ================= -->
+
+    <div
+        id="errorMessage"
+        class="error"
+    ></div>
+
+
+    <!-- ================= SUMMARY ================= -->
+
+    <div
+        id="summaryGrid"
+        class="summary-grid"
+        style="display:none;"
+    >
+
+        <div class="summary-card">
+
+            <h3>
+                📄 Total Analyses
+            </h3>
+
+            <div
+                id="totalAnalyses"
+                class="summary-value"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <h3>
+                📊 Average Resume Score
+            </h3>
+
+            <div
+                id="averageScore"
+                class="summary-value"
+            >
+                0%
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <h3>
+                🤖 Average ATS Score
+            </h3>
+
+            <div
+                id="averageATS"
+                class="summary-value"
+            >
+                0%
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= LOADING ================= -->
+
+    <div
+        id="loading"
+        class="loading"
+    >
+
+        <div class="loader"></div>
+
+        <p>
+            Loading your analysis history...
+        </p>
+
+    </div>
+
+
+    <!-- ================= HISTORY ================= -->
+
+    <div
+        id="historyList"
+        class="history-list"
+        style="display:none;"
+    ></div>
+
+
+    <!-- ================= EMPTY ================= -->
+
+    <div
+        id="emptyState"
+        class="empty"
+        style="display:none;"
+    >
+
+        <div class="empty-icon">
+            📄
+        </div>
+
+        <h2>
+            No Analysis History
+        </h2>
+
+        <p>
+            You haven't analyzed a resume yet.
+        </p>
+
+        <a
+            href="/"
+            class="dashboard-btn"
+        >
+            🚀 Analyze Your Resume
+        </a>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+
+    async function loadHistory() {
+
+        const loading =
+            document.getElementById(
+                "loading"
+            );
+
+        const historyList =
+            document.getElementById(
+                "historyList"
+            );
+
+        const emptyState =
+            document.getElementById(
+                "emptyState"
+            );
+
+        const summaryGrid =
+            document.getElementById(
+                "summaryGrid"
+            );
+
+        const errorMessage =
+            document.getElementById(
+                "errorMessage"
+            );
+
+
+        try {
+
+
+            /* ================= API ================= */
+
+            const response =
+                await fetch(
+                    "/api/history"
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error ||
+                    "Unable to load history."
+                );
+
+            }
+
+
+            /* ================= HIDE LOADING ================= */
+
+            loading.style.display =
+                "none";
+
+
+            /* ================= EMPTY ================= */
+
+            if (
+                !data ||
+                data.length === 0
+            ) {
+
+                emptyState.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            /* ================= SUMMARY ================= */
+
+            summaryGrid.style.display =
+                "grid";
+
+
+            document.getElementById(
+                "totalAnalyses"
+            ).innerText =
+                data.length;
+
+
+            let totalResumeScore = 0;
+
+            let totalATSScore = 0;
+
+
+            data.forEach(
+                record => {
+
+                    totalResumeScore +=
+                        Number(
+                            record.resume_score || 0
+                        );
+
+                    totalATSScore +=
+                        Number(
+                            record.ats_score || 0
+                        );
+
+                }
+            );
+
+
+            const averageResume =
+                totalResumeScore /
+                data.length;
+
+
+            const averageATS =
+                totalATSScore /
+                data.length;
+
+
+            document.getElementById(
+                "averageScore"
+            ).innerText =
+                averageResume.toFixed(1) +
+                "%";
+
+
+            document.getElementById(
+                "averageATS"
+            ).innerText =
+                averageATS.toFixed(1) +
+                "%";
+
+
+            /* ================= SHOW HISTORY ================= */
+
+            historyList.style.display =
+                "flex";
+
+
+            historyList.innerHTML = "";
+
+
+            /* ================= CREATE CARDS ================= */
+
+            data.forEach(
+                record => {
+
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "history-card";
+
+
+                    /* ---------- RESUME NAME ---------- */
+
+                    const resumeName =
+                        record.resume_name ||
+                        "Resume.pdf";
+
+
+                    /* ---------- MISSING SKILLS ---------- */
+
+                    const missingSkills =
+                        record.missing_skills ||
+                        "No missing skills";
+
+
+                    /* ---------- HTML ---------- */
+
+                    card.innerHTML =
+
+                        "<div class='history-top'>" +
+
+                            "<div>" +
+
+                                "<div class='resume-name'>" +
+
+                                    "📄 " +
+                                    resumeName +
+
+                                "</div>" +
+
+                                "<div class='record-id'>" +
+
+                                    "Analysis ID: #" +
+                                    record.id +
+
+                                "</div>" +
+
+                            "</div>" +
+
+                        "</div>" +
+
+
+                        "<div class='score-grid'>" +
+
+
+                            "<div class='score-box'>" +
+
+                                "<h4>" +
+                                "Resume Score" +
+                                "</h4>" +
+
+                                "<div class='score-value'>" +
+
+                                    Number(
+                                        record.resume_score || 0
+                                    ) +
+                                    "%" +
+
+                                "</div>" +
+
+                            "</div>" +
+
+
+                            "<div class='score-box'>" +
+
+                                "<h4>" +
+                                "ATS Score" +
+                                "</h4>" +
+
+                                "<div class='score-value ats-value'>" +
+
+                                    Number(
+                                        record.ats_score || 0
+                                    ) +
+                                    "%" +
+
+                                "</div>" +
+
+                            "</div>" +
+
+
+                            "<div class='score-box'>" +
+
+                                "<h4>" +
+                                "Section Score" +
+                                "</h4>" +
+
+                                "<div class='score-value'>" +
+
+                                    Number(
+                                        record.section_score || 0
+                                    ) +
+                                    "%" +
+
+                                "</div>" +
+
+                            "</div>" +
+
+
+                            "<div class='score-box'>" +
+
+                                "<h4>" +
+                                "Match Score" +
+                                "</h4>" +
+
+                                "<div class='score-value match-value'>" +
+
+                                    Number(
+                                        record.match_score || 0
+                                    ) +
+                                    "%" +
+
+                                "</div>" +
+
+                            "</div>" +
+
+
+                        "</div>" +
+
+
+                        "<div class='job-role'>" +
+
+                            "💼 " +
+                            (
+                                record.job_role ||
+                                "Not specified"
+                            ) +
+
+                        "</div>" +
+
+
+                        "<div class='missing-section'>" +
+
+                            "<h4>" +
+                            "🛠️ Missing Skills" +
+                            "</h4>" +
+
+                            "<div class='missing-skills'>" +
+
+                                missingSkills +
+
+                            "</div>" +
+
+                        "</div>";
+
+
+                    historyList.appendChild(
+                        card
+                    );
+
+
+                }
+            );
+
+
+        } catch (error) {
+
+
+            console.error(
+                "History error:",
+                error
+            );
+
+
+            loading.style.display =
+                "none";
+
+
+            errorMessage.innerText =
+                "Error: " +
+                error.message;
+
+
+            errorMessage.style.display =
+                "block";
+
+        }
+
+    }
+
+
+    /* ================= START ================= */
+
+    loadHistory();
+
+
+</script>
+
+
+</body>
+
+</html>
