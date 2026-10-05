@@ -5,6 +5,8 @@ An AI-powered web application that analyzes resumes, extracts technical skills, 
 The system combines **Python, Flask, NLP, Machine Learning, TF-IDF, Cosine Similarity, SQLite, HTML, CSS, and JavaScript** to provide an interactive resume analysis dashboard.
 
 ---
+# Deployed Link : 
+https://ai-resume-analyzer-1-m14p.onrender.com
 
 ## 📌 Project Overview
 
@@ -901,8 +903,6 @@ Docker and Containerization
 ```
 
 ---
-# Deployed Link : 
-https://ai-resume-analyzer-2-6584.onrender.com
 
 # 📌 Disclaimer
 
